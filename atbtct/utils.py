@@ -86,6 +86,8 @@ def get_bundle_list(path, tree_size):
     bundle_list_len = len(bundle_list)
     for i in range(0, bundle_list_len):
         cur_info = bundle_name_extract_re.match(bundle_list[i])
+        if int(cur_info.group(1)) >= tree_size or int(cur_info.group(2)) >= tree_size:
+            break
         if i+1 < bundle_list_len:
             nxt_info = bundle_name_extract_re.match(bundle_list[i+1])
             if cur_info.group(1) == nxt_info.group(1) and int(nxt_info.group(2)) < tree_size:
