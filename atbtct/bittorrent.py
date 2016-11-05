@@ -23,6 +23,7 @@
 import os
 import hashlib
 import multiprocessing
+import urllib.parse
 import codecs
 import xml.dom.minidom
 import time
@@ -194,16 +195,36 @@ def write_magnet_link(torrent_dir, url, pkg_num, tree_size, btih, dn, trackers, 
     filename = build_magnet_name(url, pkg_num, tree_size)
     filepath = os.path.join(torrent_dir, filename)
 
-    magnet_url = b'magnet:?xt=urn:btih:' + codecs.getencoder('hex')(btih)[0] + b'&dn=' + bytes(dn, 'UTF-8')
+    magnet_url = 'magnet:?'
+    info = {
+        'xt': b'urn:btih:' + codecs.getencoder('hex')(btih)[0],
+        'dn': bytes(dn, 'UTF-8')
+    }
+    magnet_url += urllib.parse.urlencode(info)
+
     if not isinstance(peers, type(None)):
-        for peer in peers:
-            magnet_url += b'&x.pe=' + bytes(peer, 'UTF-8')
+        lst = [
+            urllib.parse.urlencode(
+                {
+                    'x.pe': bytes(peer, 'UTF-8')
+                }
+            )
+            for peer in peers
+        ]
+        magnet_url += '&' + '&'.join(lst)
     if not isinstance(trackers, type(None)):
-        for tracker in trackers:
-            magnet_url += b'&tr=' + bytes(tracker, 'UTF-8')
+        lst = [
+            urllib.parse.urlencode(
+                {
+                    'tr': bytes(tracker, 'UTF-8')
+                }
+            )
+            for tracker in trackers
+        ]
+        magnet_url += '&' + '&'.join(lst)
 
     with open(filepath, 'wb') as fd:
-        fd.write(magnet_url)
+        fd.write(bytes(magnet_url, 'UTF-8'))
 
 
 def create_torrent(args):
