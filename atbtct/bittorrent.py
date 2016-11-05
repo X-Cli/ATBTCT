@@ -23,14 +23,13 @@
 import os
 import hashlib
 import multiprocessing
-import json
 import codecs
 import xml.dom.minidom
 import time
 
 from atbtct.utils import (
-    get_bundle_list, build_package_name, parse_url, build_sth_name, build_info_file_name,
-    build_torrent_name, build_magnet_name, build_log_name
+    get_bundle_list, build_package_name, build_sth_name, build_info_file_name,
+    build_torrent_name, build_magnet_name
 )
 
 
@@ -411,7 +410,7 @@ def update_rss_feed(torrent_dir, suggested_name, url, download_url, tree_size, t
     # Building/Verifying the XML structure
     try:
         chan = check_rss_dom_structure(doc)
-    except Exception:
+    except:
         doc, chan = init_rss_dom_structure(url)
 
     for torrent_data in torrents:

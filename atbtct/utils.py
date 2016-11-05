@@ -66,6 +66,7 @@ def get_bundle_list(path, tree_size):
     last one will be added to the list of bundles.
 
     :param path: the directory path containing the bundles
+    :param tree_size: the tree_size up to which the bundles should be selected
     :return: the list of bundles
     """
 
@@ -126,13 +127,16 @@ def build_magnet_name(url, pkg_num, tree_size):
 
 def create_new_https_connection(dnsname):
     sslctx = ssl.create_default_context()
-    sslctx.set_ciphers('ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:'
+    sslctx.set_ciphers(
+        'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:'
         'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSAAES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:'
         'ECDHE-RSAAES128-SHA256:ECDHE-ECDSA-CAMELLIA256-SHA384:ECDHE-RSA-CAMELLIA256-SHA384:'
         'ECDHE-ECDSA-CAMELLIA128-SHA256:ECDHE-RSA-CAMELLIA128-SHA256:DHE-RSA-AES256-GCM-SHA384:'
         'DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:AES256-GCM-SHA384:AES128-GCM-SHA256:'
-        'AES256-SHA256:AES128-SHA256:CAMELLIA128-SHA256')
+        'AES256-SHA256:AES128-SHA256:CAMELLIA128-SHA256'
+    )
     return http.client.HTTPSConnection(dnsname, timeout=30, context=sslctx)
+
 
 def build_urlpath(path, cmd, params=None):
     urlpath = []
